@@ -1,0 +1,27 @@
+name: Discontent Sync Down
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+      - name: Install dependencies
+        run: pip install discord.py pyyaml
+      - name: Run backup script
+        run: python backup.py
+      - name: Commit changes
+        run: |
+          git config --local user.email "discontent@ajar.fyi"
+          git config --local user.name "Discontent"
+          git add .
+          git commit -m "Discontent automated synchronization (down)"
+          git push origin main
